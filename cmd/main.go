@@ -1,37 +1,29 @@
 package main
 
 import (
-	"flag"
 	"fmt"
+	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
 	"log"
+	"os"
 )
-
-var (
-	configPath string
-)
-
-func init() {
-	flag.StringVar(&configPath, "path", ".env", "path to config file in .env format")
-}
 
 type Config struct {
 	Port string `envconfig:"PORT"`
 }
 
 func main() {
-	flag.Parse()
 	var cfg Config
 	fmt.Println("Before config: ", cfg)
+	if err := godotenv.Load(); err != nil {
+		log.Fatal(err.Error())
+	}
+	port := os.Getenv("PORT")
 	//err := env.Parse(&cfg)
 	err := envconfig.Process("MYAPP", &cfg)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
-	format := "Port:  %s\n"
-	_, err = fmt.Printf(format, cfg.Port)
-	if err != nil {
-		log.Fatal(err.Error())
-	}
+	fmt.Println("port: ", port)
 	fmt.Println("After config: ", cfg)
 }

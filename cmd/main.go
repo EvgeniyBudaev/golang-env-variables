@@ -16,7 +16,7 @@ func init() {
 }
 
 type Config struct {
-	Port string `env:"PORT"`
+	Port string
 }
 
 func main() {
@@ -25,6 +25,11 @@ func main() {
 	fmt.Println("Before config: ", cfg)
 	//err := env.Parse(&cfg)
 	err := envconfig.Process("myapp", &cfg)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+	format := "Port:  %s\n"
+	_, err = fmt.Printf(format, cfg.Port)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
